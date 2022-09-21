@@ -15,8 +15,6 @@ return new class extends Migration
     {
         Schema::create('packages', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('buyer_id')->unsigned();
-            $table->foreign('buyer_id')->references('id')->on('users');
             $table->bigInteger('shop_id')->unsigned();
             $table->foreign('shop_id')->references('id')->on('users');
             $table->string('pick_name');
@@ -25,11 +23,16 @@ return new class extends Migration
             $table->string('name');
             $table->string('phone');
             $table->string('address');
+            $table->string('deliver_name');
+            $table->string('deliver_phone');
             $table->string('return_name')->nullable();
             $table->string('return_phone')->nullable();
             $table->string('return_address')->nullable();
             $table->integer('status');
             $table->integer('price');
+            $table->dateTime('order_day');
+            $table->dateTime('receive_day');
+            $table->dateTime('return_day')->nullable();
             $table->timestamps();
 
         });
