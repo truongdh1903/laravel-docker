@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('phone');
             $table->string('address');
+            $table->bigInteger('deliver_id')->unsigned();
             $table->string('deliver_name');
             $table->string('deliver_phone');
             $table->string('return_name')->nullable();
@@ -33,6 +34,7 @@ return new class extends Migration
             $table->dateTime('order_day');
             $table->dateTime('receive_day');
             $table->dateTime('return_day')->nullable();
+            $table->integer('deliver_cost');
             $table->timestamps();
 
         });

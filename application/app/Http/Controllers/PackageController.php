@@ -10,22 +10,28 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\CustomException;
+
 class PackageController extends Controller
 {
     public function index(Request $request) {
-        $shop_id = auth('sanctum')->user()->id;
         $id = $request->id;
+        $shipper_id = $request->shipper_id;
         $order_day_from = $request->order_day_from;
         $order_day_to = $request->order_day_to;
         $receive_day_from = $request->receive_day_from;
         $receive_day_to = $request->receive_day_to;
 
-        $orders = Package::where('shop_id', $shop_id)->byId($id)->orderDayIn($order_day_from, $order_day_to)
-                    ->receiveDayIn($receive_day_from, $receive_day_to)->with('products')->get();
+        $orders = Package::byId($id)->orderDayIn($order_day_from, $order_day_to)
+                    ->receiveDayIn($receive_day_from, $receive_day_to)
+                    ->byShipperId($shipper_id)->with('products')->paginate(10);
         if (!$orders->isEmpty()) {
-            return response()->json(['orders' => $orders]);
+            $total = 0;
+            foreach($orders as $order) {
+                $total += $order->deliver_cost;
+            }
+            return response()->json(['orders' => $orders, 'total' => $total]);
         } else {
-            return response()->json(['message' => 'Shop không có đơn hàng nào']);
+            return response()->json(['message' => 'Không có đơn hàng nào']);
         }
     }
 
@@ -37,14 +43,16 @@ class PackageController extends Controller
             'name' => 'required',
             'address' => 'required',
             'phone' => 'required',
+            'deliver_id' => 'required',
             'deliver_name' => 'required',
             'deliver_phone' => 'required',
             'price' => 'required',
-            'products' => 'required'
+            'products' => 'required',
+            'deliver_cost' => 'required'
         ];
 
         $input = $request->only( 'pick_name','pick_phone', 'pick_address', 'name', 'address', 'phone',
-            'price', 'deliver_phone', 'deliver_name', 'products'
+            'price', 'deliver_phone', 'deliver_name', 'deliver_id', 'products', 'deliver_cost'
         );
         $validator = Validator::make($input, $rules);
 
@@ -69,7 +77,7 @@ class PackageController extends Controller
                     $order->products()->attach($cur_product, ['quantity' => $product['quantity']]);
                 }
                 return response()->json([
-                    'order' => $order
+                    'orders' => $order
                 ]);
             });
         } catch (\Exception $error) {

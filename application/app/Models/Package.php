@@ -22,6 +22,7 @@ class Package extends Model
         'name',
         'address',
         'phone',
+        'deliver_id',
         'deliver_name',
         'deliver_phone',
         'return_name',
@@ -31,7 +32,8 @@ class Package extends Model
         'price',
         'order_day',
         'receive_day',
-        'return_day'
+        'return_day',
+        'deliver_cost'
     ];
 
     public function products() {
@@ -63,5 +65,11 @@ class Package extends Model
             $query = $query->where('receive_day', '<=', $receive_day_to);
         }
         return $query;
+    }
+
+    public function scopeByShipperId($query, $id) {
+        if ($id) {
+            $query = $query->where('deliver_id', $id);
+        }
     }
 }

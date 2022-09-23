@@ -108,6 +108,7 @@
       <path value="$PROJECT_DIR$/application/vendor/psy/psysh" />
       <path value="$PROJECT_DIR$/application/vendor/filp/whoops" />
       <path value="$PROJECT_DIR$/application/vendor/monolog/monolog" />
+      <path value="$PROJECT_DIR$/application/vendor/fruitcake/laravel-cors" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0" />

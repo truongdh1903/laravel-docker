@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
@@ -33,6 +34,12 @@ class AuthController extends Controller
         $type = $request->type;
         $address = $request->address;
         $user = User::create(['name' => $name, 'email' => $email, 'phone' => $phone, 'type' => $type, 'address' => $address, 'password' => Hash::make($password)]);
+        $tokenResult = $user->createToken('authToken')->plainTextToken;
+        return response()->json([
+            'status_code' => 200,
+            'access_token' => $tokenResult,
+            'token_type' => 'Bearer',
+        ]);
     }
     public function login(Request $request)
     {
@@ -71,5 +78,24 @@ class AuthController extends Controller
                 'error' => $error,
             ]);
         }
+    }
+
+    public function logout(Request $request)
+    {
+        // Get bearer token from the request
+        $accessToken = $request->bearerToken();
+        
+        // Get access token from database
+        $token = PersonalAccessToken::findToken($accessToken);
+
+        // Revoke token
+        $token->delete();
+    }
+
+    public function me(Request $request)
+    {
+        return response()->json([
+            'data' => $request->user(),
+        ]);
     }
 }
