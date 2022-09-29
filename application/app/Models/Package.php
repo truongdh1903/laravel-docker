@@ -47,22 +47,22 @@ class Package extends Model
         return $query;
     }
 
-    public function scopeOrderDayIn($query, $order_day_from, $order_day_to) {
-        if($order_day_from) {
-            $query = $query->where('order_day', '>=', $order_day_from);
+    public function scopeOrderDayIn($query, $orderDayFrom, $orderDayTo) {
+        if($orderDayFrom) {
+            $query = $query->where('order_day', '>=', $orderDayFrom);
         }
-        if($order_day_to) {
-            $query = $query->where('order_day', '<=', $order_day_to);
+        if($orderDayTo) {
+            $query = $query->where('order_day', '<=', $orderDayTo);
         }
         return $query;
     }
 
-    public function scopeReceiveDayIn($query, $receive_day_from, $receive_day_to) {
-        if($receive_day_from) {
-            $query = $query->where('receive_day', '>=', $receive_day_from);
+    public function scopeReceiveDayIn($query, $receiveDayFrom, $receiveDayTo) {
+        if($receiveDayFrom) {
+            $query = $query->where('receive_day', '>=', $receiveDayFrom);
         }
-        if($receive_day_to) {
-            $query = $query->where('receive_day', '<=', $receive_day_to);
+        if($receiveDayTo) {
+            $query = $query->where('receive_day', '<=', $receiveDayTo);
         }
         return $query;
     }

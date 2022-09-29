@@ -1,5 +1,5 @@
 <template>
-    <toast/>
+    <toast :message="message"/>
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -70,7 +70,7 @@
                                 <td colspan="2"><h5>Total earning: {{total}}</h5></td>
                             </tr>
                         </table>
-                        <nav aria-label="Page navigation example">
+                        <nav aria-label="Page navigation example" v-if="orders.length">
                             <ul class="pagination">
                                 <li class="page-item">
                                     <a class="page-link" href="javascript:void(0)" @click.prevent="getPage(cur_index - 1)" :class="cur_index == 1 ? 'disabled' : ''">Previous</a>
@@ -107,12 +107,24 @@ export default {
             links: [],
             page: 0,
             cur_index: 1,
-            statuses: ['Pending', 'Accepted', 'Picked', 'Delivering', 'Delivered']
+            statuses: ['Pending', 'Accepted', 'Picked', 'Delivering', 'Delivered'],
+            message: ''
         }
     },
     methods: {
         editUser(){
-            window.myAxios.put(`user/${this.user.id}/edit`, this.user).then(res => {
+            window.myAxios.put(`user/${this.user.id}/edit`, this.user, {
+                headers: {
+                    Authorization: 'Bearer ' + window.localStorage.getItem('token')
+                }
+            }).then(res => {
+                this.message = 'Success'
+                $('.toast').show()
+                setTimeout(() => {
+                    $('.toast').hide()
+                }, 2000);
+            }).catch(error => {
+                this.message = error.response.data.error
                 $('.toast').show()
                 setTimeout(() => {
                     $('.toast').hide()

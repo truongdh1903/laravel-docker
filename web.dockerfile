@@ -4,4 +4,4 @@ WORKDIR /var/www/html
 
 COPY ./frontend .
 
-RUN yarn && yarn dev --port 3000
+RUN yarn && yarn dev --host 0.0.0.0

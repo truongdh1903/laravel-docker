@@ -15,15 +15,15 @@ class PackageController extends Controller
 {
     public function index(Request $request) {
         $id = $request->id;
-        $shipper_id = $request->shipper_id;
-        $order_day_from = $request->order_day_from;
-        $order_day_to = $request->order_day_to;
-        $receive_day_from = $request->receive_day_from;
-        $receive_day_to = $request->receive_day_to;
+        $shipperId = $request->shipper_id;
+        $orderDayFrom = $request->order_day_from;
+        $orderDayTo = $request->order_day_to;
+        $receiveDayFrom = $request->receive_day_from;
+        $receiveDayTo = $request->receive_day_to;
 
-        $orders = Package::byId($id)->orderDayIn($order_day_from, $order_day_to)
-                    ->receiveDayIn($receive_day_from, $receive_day_to)
-                    ->byShipperId($shipper_id)->with('products')->paginate(10);
+        $orders = Package::byId($id)->orderDayIn($orderDayFrom, $orderDayTo)
+                    ->receiveDayIn($receiveDayFrom, $receiveDayTo)
+                    ->byShipperId($shipperId)->with('products')->paginate(10);
         if (!$orders->isEmpty()) {
             $total = 0;
             foreach($orders as $order) {
@@ -70,11 +70,11 @@ class PackageController extends Controller
                 $input['receive_day'] = date("Y-m-d", strtotime("+1 week"));
                 $order = Package::create($input);
                 foreach($products as $product) {
-                    $cur_product = Product::find($product['id']);
-                    if (!$cur_product) {
+                    $curProduct = Product::find($product['id']);
+                    if (!$curProduct) {
                         throw new CustomException("Product with id {$product['id']} not found");
                     }
-                    $order->products()->attach($cur_product, ['quantity' => $product['quantity']]);
+                    $order->products()->attach($curProduct, ['quantity' => $product['quantity']]);
                 }
                 return response()->json([
                     'orders' => $order

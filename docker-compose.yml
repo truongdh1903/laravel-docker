@@ -37,7 +37,7 @@ services:
   #   networks:
   #     - laravel-docker
   #   ports:
-  #     - 3000:3000
+  #     - 3000:4173
   db:
     image: mysql:5.7
     container_name: db

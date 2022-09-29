@@ -1,5 +1,5 @@
 <template>
-    <toast/>
+    <toast :message="message"/>
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -66,6 +66,7 @@ export default {
             links: [],
             page: 0,
             cur_index: 1,
+            message: ''
         }
     },
     created(){
@@ -80,7 +81,11 @@ export default {
 
     methods: {
         deleteUser(id) {
-            window.myAxios.delete(`user/${id}/delete`).then(res => {
+            window.myAxios.delete(`user/${id}/delete`, {
+                headers: {
+                    Authorization: 'Bearer ' + window.localStorage.getItem('token')
+                }
+            }).then(res => {
                 $(`#user-${id}`).remove()
                 $('.toast').show()
                 setTimeout(() => {

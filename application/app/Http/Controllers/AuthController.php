@@ -14,8 +14,8 @@ class AuthController extends Controller
     public function register(Request $request) {
         $rules = [
             'name' => 'required',
-            'email'    => 'unique:users|required',
-            'password' => 'required',
+            'email'    => 'unique:users|email|max:255|required|regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix',
+            'password' => 'required|min:6',
             'phone' => 'unique:users|required',
             'type' => 'required',
             'address' => 'required'
